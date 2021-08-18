@@ -7,7 +7,7 @@ const router = createRouter({
     history: createWebHistory(),
     routes:[
         {path:'/new', component: New},
-        {path:'/task', component: Task},
+        {path:'/task/:idTask', component: Task, props:true},
         {path:'/tasks', component: Tasks, alias:'/'},
     ],
     linkActiveClass: 'active',
