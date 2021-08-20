@@ -1,4 +1,4 @@
-# vue-3-week-my
+# 13-vue-ts-prep
 
 ## Project setup
 ```
