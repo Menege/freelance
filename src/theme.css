@@ -411,7 +411,7 @@ h3 {
     padding: 0 .5rem;
 }
 
-.badge.active {
+.badge.primary {
     border-color: #3eaf7c;
     color: #3eaf7c;
 }

@@ -1,45 +1,48 @@
 <template>
-  <div class="card">
-    <h2> {{}} </h2>
-    <p>
-      <strong>Статус</strong>:
-      <AppStatus :mail-id="link" :type="'done'" />
-    </p>
-    <p><strong>Дэдлайн</strong>: {{ new Date().toLocaleDateString() }}</p>
-    <p><strong>Описание</strong>: Описание задачи</p>
+  <div class="card" v-if="task">
+    <h2>{{task.title}}</h2>
+    <p><strong>Статус</strong>: <AppStatus :type="task.status" /></p>
+    <p><strong>Дэдлайн</strong>: {{ new Date(task.date).toLocaleDateString() }}</p>
+    <p><strong>Описание</strong>: {{ task.description }}</p>
     <div>
-      <button class="btn">Взять в работу</button>
-      <button class="btn primary">Завершить</button>
-      <button class="btn danger">Отменить</button>
+      <button class="btn" @click="setStatus('pending')">Взять в работу</button>
+      <button class="btn primary" @click="setStatus('done')">Завершить</button>
+      <button class="btn danger" @click="setStatus('cancelled')">Отменить</button>
     </div>
   </div>
-  <h3 class="text-white center">
-    Задачи с id = <strong> {{ link }} </strong> нет.
+  <h3 class="text-white center" v-else>
+    Задачи с id = <strong>{{id}}</strong> нет.
   </h3>
 </template>
 
 <script>
-import AppStatus from "../components/AppStatus";
-import {mapGetters} from 'vuex'
+import {computed} from 'vue'
+import {useStore} from 'vuex'
+import AppStatus from '../components/AppStatus'
 
 export default {
-  components: { AppStatus },
-  computed: {
+  components: {AppStatus},
+  props: ['id'],
+  setup(props) {
+    const store = useStore()
 
+    const id = props.id
+    const task = computed(() => store.getters.taskById(id))
 
-...mapGetters(['arrayTasks']),
+    const setStatus = status => {
+      const updated = {...task.value, status}
+      store.dispatch('changeTask', updated)
+    }
 
-
-
-    task() {
-      return this.$state.arrayTasks.find((e) => e.id === this.mailId);
-    },
-    link() {
-      return this.$route.params.idTask;
-    },
-  },
-};
+    return {
+      task,
+      id,
+      setStatus
+    }
+  }
+}
 </script>
 
 <style scoped>
+
 </style>
